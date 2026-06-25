@@ -4,7 +4,11 @@
   /* justify-content: center; */
   align-items: center;
   flex: 1;
+  /* 100vh on iOS includes the area under the toolbars, which forces the page
+     to scroll even when content fits. dvh tracks the visible height instead;
+     vh stays as a fallback for browsers without dvh support. */
   min-height: 100vh;
+  min-height: 100dvh;
   justify-content: center;
   user-select: none;
   -webkit-user-select: none;

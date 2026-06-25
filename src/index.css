@@ -2,6 +2,8 @@ html,
 body,
 #root {
   background-color: #151515;
+  /* Stop the page from rubber-band scrolling when the content already fits. */
+  overscroll-behavior-y: none;
 }
 
 body {
