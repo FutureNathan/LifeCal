@@ -5,9 +5,7 @@ import { IUnit, Unit } from "./types/types";
 import classes from "./style/grid.module.css";
 import appClasses from "./style/app.module.css";
 import { DateTime, DurationUnits } from "luxon";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
-import { createTheme, TextField, ThemeProvider } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material";
 import { colors as myColors } from "./theme/colors";
 import { motion } from "framer-motion";
 import { useWindowSize } from "./helpers/useWindowDimensions";
@@ -92,7 +90,6 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
         <div
           className={appClasses.app + " toggle"}
           style={{ backgroundColor: myColors.secondary }}
@@ -110,28 +107,22 @@ function App() {
 
               {showHeader && (
                 <div className={appClasses.picker}>
-                  {" "}
-                  <MobileDatePicker
-                    className={appClasses.date}
-                    label="Birthdate"
-                    openTo="year"
-                    disableFuture
-                    value={birthDate}
-                    onChange={(newValue) => {
-                      setBirthDate(newValue);
-                    }}
-                    onAccept={(newValue) => {
-                      setBirthDate(newValue);
-                      setShowHeader(false);
-                      localStorage.setItem("birthDate", newValue as string);
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    )}
-                  />
+                  <label className={appClasses.dateLabel}>
+                    Birthdate
+                    <input
+                      type="date"
+                      className={appClasses.date}
+                      max={DateTime.now().toISODate() ?? undefined}
+                      value={birthDate ?? ""}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => {
+                        const newValue = e.target.value;
+                        setBirthDate(newValue);
+                        setShowHeader(false);
+                        localStorage.setItem("birthDate", newValue);
+                      }}
+                    />
+                  </label>
                   <Units unitState={unit} setUnit={setUnit} />
                 </div>
               )}
@@ -164,7 +155,6 @@ function App() {
             ))}
           </div>
         </div>
-      </LocalizationProvider>
     </ThemeProvider>
   );
 }
