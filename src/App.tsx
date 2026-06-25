@@ -207,10 +207,11 @@ function App() {
                   <motion.div
                     key="picker"
                     className={appClasses.picker}
-                    initial={{ opacity: 0, y: -14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -14 }}
-                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ overflow: "hidden" }}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
                   >
                   <span className={appClasses.dobLabel}>Date of birth</span>
                   <div className={appClasses.dobFields}>
