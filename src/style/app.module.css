@@ -83,4 +83,8 @@
   flex-direction: column;
   /* justify-content: center; */
   align-items: center;
+  /* Full width so the box origin never shifts horizontally when the picker
+     opens — the layout animation then only moves vertically (no sideways
+     jerk). Children stay centred via align-items. */
+  width: 100%;
 }
