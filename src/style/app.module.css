@@ -8,28 +8,30 @@
   justify-content: center;
 }
 
-.date {
+.dobLabel {
+  color: white;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.dobFields {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.dobSelect {
   background-color: transparent;
   color: white;
   border: 1px solid white;
   border-radius: 8px;
-  padding: 10px 14px;
+  padding: 10px 12px;
   font-size: 16px;
   font-family: inherit;
   outline: none;
   cursor: pointer;
   color-scheme: dark;
-}
-
-.dateLabel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: white;
-  font-size: 14px;
-  letter-spacing: 0.04em;
-  margin-bottom: 12px;
 }
 .reEnter {
   position: absolute;

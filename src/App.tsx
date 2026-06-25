@@ -13,11 +13,29 @@ import Units from "./components/Units";
 import squareClasses from "./style/square.module.css";
 
 const theme = createTheme({});
-////
+
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 function App() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [unit, setUnit] = useState<IUnit>(units[0]);
   const [birthDate, setBirthDate] = useState<null | string>(null);
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
+  const [year, setYear] = useState("");
   const [diff, setDiff] = useState<number>(0);
   const [showHeader, setShowHeader] = useState(true);
   const { width } = useWindowSize();
@@ -27,7 +45,14 @@ function App() {
     const birthDateFromStorage = localStorage.getItem("birthDate");
 
     if (birthDateFromStorage) {
-      setBirthDate(birthDateFromStorage);
+      const stored = DateTime.fromISO(birthDateFromStorage);
+
+      if (stored.isValid) {
+        setBirthDate(birthDateFromStorage);
+        setMonth(String(stored.month));
+        setDay(String(stored.day));
+        setYear(String(stored.year));
+      }
     }
   }, []);
 
@@ -88,6 +113,68 @@ function App() {
     }
   };
 
+  const now = DateTime.now();
+  const years = Array.from({ length: 121 }, (_, i) => now.year - i);
+
+  const daysInSelectedMonth = month
+    ? DateTime.fromObject({
+        year: year ? Number(year) : 2000,
+        month: Number(month),
+      }).daysInMonth ?? 31
+    : 31;
+  const days = Array.from({ length: daysInSelectedMonth }, (_, i) => i + 1);
+
+  const commitBirthDate = (m: string, d: string, y: string) => {
+    if (!m || !d || !y) return;
+
+    const picked = DateTime.fromObject({
+      year: Number(y),
+      month: Number(m),
+      day: Number(d),
+    });
+
+    if (picked.isValid && picked.toMillis() <= now.toMillis()) {
+      const iso = picked.toISODate();
+
+      if (iso) {
+        if (!birthDate) setShowHeader(false);
+        setBirthDate(iso);
+        localStorage.setItem("birthDate", iso);
+      }
+    }
+  };
+
+  // Keep the selected day valid when the month/year changes (e.g. Feb 30).
+  const clampDay = (m: string, y: string) => {
+    if (!m || !day) return day;
+
+    const max =
+      DateTime.fromObject({ year: y ? Number(y) : 2000, month: Number(m) })
+        .daysInMonth ?? 31;
+
+    if (Number(day) > max) {
+      setDay("");
+      return "";
+    }
+
+    return day;
+  };
+
+  const handleMonth = (value: string) => {
+    setMonth(value);
+    commitBirthDate(value, clampDay(value, year), year);
+  };
+
+  const handleDay = (value: string) => {
+    setDay(value);
+    commitBirthDate(month, value, year);
+  };
+
+  const handleYear = (value: string) => {
+    setYear(value);
+    commitBirthDate(month, clampDay(month, value), value);
+  };
+
   return (
     <ThemeProvider theme={theme}>
         <div
@@ -107,22 +194,48 @@ function App() {
 
               {showHeader && (
                 <div className={appClasses.picker}>
-                  <label className={appClasses.dateLabel}>
-                    Birthdate
-                    <input
-                      type="date"
-                      className={appClasses.date}
-                      max={DateTime.now().toISODate() ?? undefined}
-                      value={birthDate ?? ""}
+                  <span className={appClasses.dobLabel}>Date of birth</span>
+                  <div className={appClasses.dobFields}>
+                    <select
+                      className={appClasses.dobSelect}
+                      value={month}
                       onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => {
-                        const newValue = e.target.value;
-                        setBirthDate(newValue);
-                        setShowHeader(false);
-                        localStorage.setItem("birthDate", newValue);
-                      }}
-                    />
-                  </label>
+                      onChange={(e) => handleMonth(e.target.value)}
+                    >
+                      <option value="">Month</option>
+                      {MONTHS.map((name, i) => (
+                        <option key={name} value={i + 1}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className={appClasses.dobSelect}
+                      value={day}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => handleDay(e.target.value)}
+                    >
+                      <option value="">Day</option>
+                      {days.map((d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className={appClasses.dobSelect}
+                      value={year}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => handleYear(e.target.value)}
+                    >
+                      <option value="">Year</option>
+                      {years.map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <Units unitState={unit} setUnit={setUnit} />
                 </div>
               )}
