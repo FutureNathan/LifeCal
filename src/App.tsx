@@ -37,7 +37,12 @@ function App() {
   const [day, setDay] = useState("");
   const [year, setYear] = useState("");
   const [diff, setDiff] = useState<number>(0);
-  const [showHeader, setShowHeader] = useState(true);
+  // Start collapsed (just title + grid) when a valid birth date is already
+  // stored, so returning visitors don't see the picker open every load.
+  const [showHeader, setShowHeader] = useState(() => {
+    const stored = localStorage.getItem("birthDate");
+    return !(stored && DateTime.fromISO(stored).isValid);
+  });
   const { width, height } = useWindowSize();
   const divRef = useRef<HTMLDivElement>(null);
 
