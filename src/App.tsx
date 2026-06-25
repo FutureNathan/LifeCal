@@ -47,6 +47,8 @@ function App() {
   const divRef = useRef<HTMLDivElement>(null);
   // The first grid fade-in is a touch slower than later view switches.
   const initialLoad = useRef(true);
+  const touchStart = useRef({ x: 0, y: 0 });
+  const swiped = useRef(false);
 
   useEffect(() => {
     const birthDateFromStorage = localStorage.getItem("birthDate");
@@ -73,13 +75,37 @@ function App() {
     initialLoad.current = false;
   }, []);
 
-  const clickDiv = (e: any) => {
-    console.log(e.target === divRef.current);
+  // Tapping the background or the calendar grid toggles the menu, unless the
+  // gesture was a horizontal swipe (which switches views instead).
+  const toggleMenu = () => {
+    if (swiped.current) return;
+    setShowHeader((p) => !p);
+  };
 
+  const clickDiv = (e: any) => {
     if (e.target === divRef.current) {
-      setShowHeader((p) => !p);
+      toggleMenu();
     }
-    // console.log(e.currentTarget.classList.contains("toggle"));
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    swiped.current = false;
+    touchStart.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    };
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStart.current.x;
+    const dy = e.changedTouches[0].clientY - touchStart.current.y;
+    // Horizontal swipe (and clearly more horizontal than vertical) switches view.
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      swiped.current = true;
+      const idx = units.findIndex((u) => u.text === unit.text);
+      const next = idx + (dx < 0 ? 1 : -1);
+      if (next >= 0 && next < units.length) setUnit(units[next]);
+    }
   };
 
   useEffect(() => {
@@ -198,6 +224,8 @@ function App() {
           style={{ backgroundColor: myColors.secondary }}
           ref={divRef}
           onClick={clickDiv}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           {
             <motion.div
@@ -281,6 +309,7 @@ function App() {
             <motion.div
               key={unit.text}
               className={classes.grid}
+              onClick={toggleMenu}
               style={{
                 gridTemplateColumns: `repeat(${unit.rowCount}, ${cellPx}px)`,
                 gridTemplateRows: `repeat(${unit.columnCount}, ${cellPx}px)`,
