@@ -231,7 +231,7 @@ function App() {
             <motion.div
               className={appClasses.header}
               layout="position"
-              transition={{ layout: { duration: 1, ease: [0.4, 0, 0.2, 1] } }}
+              transition={{ layout: { duration: 1.4, ease: [0.65, 0, 0.35, 1] } }}
             >
               <p className={appClasses.title}>
                 MY LIFE IN
@@ -318,8 +318,10 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{
-                duration: initialLoad.current ? 0.8 : 1,
-                ease: [0.4, 0, 0.2, 1],
+                duration: initialLoad.current ? 0.8 : 1.4,
+                ease: initialLoad.current
+                  ? [0.4, 0, 0.2, 1]
+                  : [0.65, 0, 0.35, 1],
               }}
             >
               {arrays[unit.text.toLowerCase()].map((_, index) => (
