@@ -3,38 +3,27 @@
 }
 
 .square {
+  width: 0.9vh;
+  height: 0.9vh;
   border: 0.1px solid white;
   border-radius: 99px;
   list-style-type: none;
-  animation: appearDesktop 0.5s forwards ease;
 }
-@media only screen and (max-width: 720px) {
-  .square {
-    animation: appearMobile 0.5s forwards ease;
-  }
-}
+
 .squareMonth {
+  width: 1.4vh;
+  height: 1.4vh;
   border: 0.1px solid white;
   border-radius: 99px;
   list-style-type: none;
-  animation: appearDesktopMonth 0.5s forwards ease;
-}
-@media only screen and (max-width: 720px) {
-  .squareMonth {
-    animation: appearMobileMonth 0.5s forwards ease;
-  }
 }
 
 .squareYear {
+  width: 7vh;
+  height: 7vh;
   border: 0.1px solid white;
   border-radius: 99px;
   list-style-type: none;
-  animation: appearDesktopYear 0.5s forwards ease;
-}
-@media only screen and (max-width: 720px) {
-  .squareYear {
-    animation: appearMobileYear 0.5s forwards ease;
-  }
 }
 
 .number {
@@ -44,68 +33,17 @@
   font-size: 8px;
 }
 
-@keyframes appearMobile {
-  from {
-    width: 0.1vh;
-    height: 0.1vh;
-  }
-  to {
+@media only screen and (max-width: 720px) {
+  .square {
     width: 0.4vh;
     height: 0.4vh;
   }
-}
-
-@keyframes appearDesktop {
-  from {
-    width: 0.1vh;
-    height: 0.1vh;
-  }
-  to {
-    width: 0.9vh;
-    height: 0.9vh;
-  }
-}
-
-@keyframes appearMobileMonth {
-  from {
-    width: 0.1vh;
-    height: 0.1vh;
-  }
-  to {
+  .squareMonth {
     width: 1vh;
     height: 1vh;
   }
-}
-
-@keyframes appearDesktopMonth {
-  from {
-    width: 0.1vh;
-    height: 0.1vh;
-  }
-  to {
-    width: 1.4vh;
-    height: 1.4vh;
-  }
-}
-
-@keyframes appearMobileYear {
-  from {
-    width: 0.1vh;
-    height: 0.1vh;
-  }
-  to {
+  .squareYear {
     width: 3vh;
     height: 3vh;
-  }
-}
-
-@keyframes appearDesktopYear {
-  from {
-    width: 0.1vh;
-    height: 0.1vh;
-  }
-  to {
-    width: 7vh;
-    height: 7vh;
   }
 }

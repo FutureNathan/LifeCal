@@ -194,7 +194,11 @@ function App() {
           onClick={clickDiv}
         >
           {
-            <motion.div className={appClasses.header}>
+            <motion.div
+              className={appClasses.header}
+              layout="position"
+              transition={{ layout: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } }}
+            >
               <p className={appClasses.title}>
                 MY LIFE IN
                 <p style={{ color: "white", marginLeft: "8px" }}>
@@ -267,22 +271,30 @@ function App() {
             </h2>
           ) : null} */}
 
-          <div
-            className={classes.grid}
-            style={{
-              gridTemplateColumns: `repeat(${unit.rowCount}, ${cellPx}px)`,
-              gridTemplateRows: `repeat(${unit.columnCount}, ${cellPx}px)`,
-            }}
-          >
-            {arrays[unit.text.toLowerCase()].map((_, index) => (
-              <Square
-                unit={unit.text}
-                index={index}
-                fillColor={index + 1 < (diff || 0)}
-                className={getCircleDimensions(unit.text)?.className as any}
-              />
-            ))}
-          </div>
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key={unit.text}
+              className={classes.grid}
+              style={{
+                gridTemplateColumns: `repeat(${unit.rowCount}, ${cellPx}px)`,
+                gridTemplateRows: `repeat(${unit.columnCount}, ${cellPx}px)`,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+            >
+              {arrays[unit.text.toLowerCase()].map((_, index) => (
+                <Square
+                  key={index}
+                  unit={unit.text}
+                  index={index}
+                  fillColor={index + 1 < (diff || 0)}
+                  className={getCircleDimensions(unit.text)?.className as any}
+                />
+              ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
     </ThemeProvider>
   );
