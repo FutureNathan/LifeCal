@@ -231,7 +231,7 @@ function App() {
             <motion.div
               className={appClasses.header}
               layout="position"
-              transition={{ layout: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } }}
+              transition={{ layout: { duration: 1, ease: [0.4, 0, 0.2, 1] } }}
             >
               <p className={appClasses.title}>
                 MY LIFE IN
@@ -318,7 +318,7 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{
-                duration: initialLoad.current ? 0.8 : 0.6,
+                duration: initialLoad.current ? 0.8 : 1,
                 ease: [0.4, 0, 0.2, 1],
               }}
             >
