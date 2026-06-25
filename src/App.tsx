@@ -123,7 +123,7 @@ function App() {
                     onAccept={(newValue) => {
                       setBirthDate(newValue);
                       setShowHeader(false);
-                      localStorage.setItem("birthDate", birthDate as string);
+                      localStorage.setItem("birthDate", newValue as string);
                     }}
                     renderInput={(params) => (
                       <TextField
