@@ -7,7 +7,7 @@ import appClasses from "./style/app.module.css";
 import { DateTime, DurationUnits } from "luxon";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { colors as myColors } from "./theme/colors";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useWindowSize } from "./helpers/useWindowDimensions";
 import Units from "./components/Units";
 import squareClasses from "./style/square.module.css";
@@ -202,8 +202,16 @@ function App() {
                 </p>
               </p>
 
-              {showHeader && (
-                <div className={appClasses.picker}>
+              <AnimatePresence>
+                {showHeader && (
+                  <motion.div
+                    key="picker"
+                    className={appClasses.picker}
+                    initial={{ opacity: 0, y: -14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -14 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  >
                   <span className={appClasses.dobLabel}>Date of birth</span>
                   <div className={appClasses.dobFields}>
                     <select
@@ -247,8 +255,9 @@ function App() {
                     </select>
                   </div>
                   <Units unitState={unit} setUnit={setUnit} />
-                </div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           }
           {/* {diff ? (
