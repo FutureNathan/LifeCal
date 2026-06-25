@@ -45,6 +45,8 @@ function App() {
   });
   const { width, height } = useWindowSize();
   const divRef = useRef<HTMLDivElement>(null);
+  // The first grid fade-in is a touch slower than later view switches.
+  const initialLoad = useRef(true);
 
   useEffect(() => {
     const birthDateFromStorage = localStorage.getItem("birthDate");
@@ -66,6 +68,10 @@ function App() {
       console.log(divRef.current);
     }
   }, [divRef]);
+
+  useEffect(() => {
+    initialLoad.current = false;
+  }, []);
 
   const clickDiv = (e: any) => {
     console.log(e.target === divRef.current);
@@ -197,7 +203,7 @@ function App() {
             <motion.div
               className={appClasses.header}
               layout="position"
-              transition={{ layout: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } }}
+              transition={{ layout: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } }}
             >
               <p className={appClasses.title}>
                 MY LIFE IN
@@ -282,7 +288,10 @@ function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+              transition={{
+                duration: initialLoad.current ? 0.8 : 0.6,
+                ease: [0.4, 0, 0.2, 1],
+              }}
             >
               {arrays[unit.text.toLowerCase()].map((_, index) => (
                 <Square
