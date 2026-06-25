@@ -38,7 +38,7 @@ function App() {
   const [year, setYear] = useState("");
   const [diff, setDiff] = useState<number>(0);
   const [showHeader, setShowHeader] = useState(true);
-  const { width } = useWindowSize();
+  const { width, height } = useWindowSize();
   const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -175,6 +175,11 @@ function App() {
     commitBirthDate(month, clampDay(month, value), value);
   };
 
+  // Size each grid track to a whole number of pixels. Fractional (vh-based)
+  // tracks round inconsistently per device pixel and produce visible seams.
+  const circleSizeVh = parseFloat(getCircleDimensions(unit.text)?.size ?? "0");
+  const cellPx = Math.max(1, Math.round(1.2 + (circleSizeVh / 100) * height));
+
   return (
     <ThemeProvider theme={theme}>
         <div
@@ -250,12 +255,8 @@ function App() {
           <div
             className={classes.grid}
             style={{
-              gridTemplateColumns: `repeat(${unit.rowCount}, calc(1.2px + ${
-                getCircleDimensions(unit.text)?.size
-              })`,
-              gridTemplateRows: `repeat(${unit.columnCount}, calc(1.2px + ${
-                getCircleDimensions(unit.text)?.size
-              })`,
+              gridTemplateColumns: `repeat(${unit.rowCount}, ${cellPx}px)`,
+              gridTemplateRows: `repeat(${unit.columnCount}, ${cellPx}px)`,
             }}
           >
             {arrays[unit.text.toLowerCase()].map((_, index) => (
